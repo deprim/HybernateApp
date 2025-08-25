@@ -2,6 +2,7 @@ package com.dandek.libratrack;
 
 
 import com.dandek.libratrack.model.Item;
+import com.dandek.libratrack.model.Passport;
 import com.dandek.libratrack.model.Person;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -18,7 +19,7 @@ public class App
         // Connect file hibernate.properties and Entity
         Configuration configuration = new Configuration()
                 .addAnnotatedClass(Person.class)
-                .addAnnotatedClass(Item.class);
+                .addAnnotatedClass(Passport.class);
 
         SessionFactory sessionFactory = configuration.buildSessionFactory();
         Session session = sessionFactory.getCurrentSession();
@@ -28,13 +29,15 @@ public class App
 
             session.beginTransaction();
 
-            Person person = session.get(Person.class, 4);
-            Item item = session.get(Item.class, 1);
 
-            item.getOwner().getItems().remove(item);
+            Person person = session.get(Person.class, 1);
 
-            item.setOwner(person);
-            person.getItems().add(item);
+
+            Passport passport = new Passport(123321, person);
+            person.setPassport(passport);
+            session.save(passport);
+
+
 
 
             session.getTransaction().commit();
